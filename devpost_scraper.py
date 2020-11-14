@@ -8,6 +8,17 @@ def get_page(url):
     return BeautifulSoup(r.content, features='lxml')
 
 
+def get_eligibility(url):
+    """ Scrapes url to find eligibility requirements, returns '<Not Available'> otherwise """
+    soup = get_page(url)
+    eligibility = soup.find(id='challenge-eligibility')
+    if eligibility is None:
+        return '<Not Available>'
+    # strip whitespace, strip Eligibility header
+    eligibility_text = eligibility.get_text().strip()
+    return eligibility_text.lstrip('Eligibility').strip()
+
+
 for page_num in range(1, 11):
     hackathons_url = f'https://devpost.com/hackathons?page={page_num}'
     soup = get_page(hackathons_url)
