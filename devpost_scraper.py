@@ -15,9 +15,15 @@ soup = get_page(hackathons_url)
 # print(soup.prettify())
 hackathons = soup.find_all('article', {'class': 'challenge-listing'})
 for hackathon in hackathons:
+    name = hackathon.find('h2').text.strip()
+    if len(name) <= 1:
+        name = '<No Name>'
+    print(name)
     url = hackathon.a.get('href')
-    print(url)
     soup = get_page(url)
     eligibility = soup.find(id='challenge-eligibility')
-    print(eligibility.get_text().strip().replace('\n', '  '))
-    break
+    if eligibility is None:
+        continue
+    eligibility_text = eligibility.get_text().strip()
+    print(eligibility_text.lstrip('Eligibility').strip())
+    print('-' * 80)
